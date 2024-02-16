@@ -1,13 +1,20 @@
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v3 # Необходимо для доступа к файлам репозитория
-
-  - name: Read script from file
-    id: read_script
-    run: echo "::set-output name=script::$(cat scripts/approval-check.js)"
-
-  - name: Execute script
-    uses: actions/github-script@v6
-    with:
-      github-token: ${{secrets.GITHUB_TOKEN}}
-      script: ${{ steps.read_script.outputs.script }}
+name: Check Specific Reviewer Approval
+on:
+  pull_request_review:
+    types: [submitted, dismissed]
+jobs:
+  check-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3 # Необходимо для доступа к файлам репозитория
+    
+      - name: Read script from file
+        id: read_script
+        run: echo "::set-output name=script::$(cat scripts/approval-check.js)"
+    
+      - name: Execute script
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: ${{ steps.read_script.outputs.script }}
