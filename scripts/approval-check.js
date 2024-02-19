@@ -10,6 +10,7 @@ const approval = reviews.data.some(review =>
   review.user.login === reviewer && review.state === 'APPROVED'
 );
 
+// Конфликт
+
 core.setOutput("approved", approval)
 
-// Конфликт
