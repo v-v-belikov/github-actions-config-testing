@@ -1,0 +1,13 @@
+name: Check Specific Reviewer Approval
+on:
+  pull_request_review:
+    types: [submitted, dismissed]
+jobs:
+  check-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3 # Необходимо для доступа к файлам репозитория
+    
+      - name: Print Approval Message
+        run: echo "Pull Request has been approved!"
