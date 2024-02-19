@@ -12,5 +12,5 @@ const approval = reviews.data.some(review =>
 
 // Конфликт
 
-core.setOutput("approved", approval)
+console.log(text)
 
