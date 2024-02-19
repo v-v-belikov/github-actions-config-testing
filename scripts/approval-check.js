@@ -11,10 +11,3 @@ const approval = reviews.data.some(review =>
 );
 
 core.setOutput("approved", approval)
-// if (approval) {
-//   console.log(`${reviewer} has approved this PR`);
-//   // Дополнительные действия
-// } else {
-//   console.log(`${reviewer} has not approved this PR`);
-//   // Действия, если апрува нет
-// }
