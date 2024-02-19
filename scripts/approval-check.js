@@ -13,3 +13,4 @@ const approval = reviews.data.some(review =>
 core.setOutput("approved", approval)
 
 console.log("textbfdfbdbddbsdv")
+
