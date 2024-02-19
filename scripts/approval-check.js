@@ -10,7 +10,6 @@ const approval = reviews.data.some(review =>
   review.user.login === reviewer && review.state === 'APPROVED'
 );
 
-
 core.setOutput("approved", approval)
 // if (approval) {
 //   console.log(`${reviewer} has approved this PR`);

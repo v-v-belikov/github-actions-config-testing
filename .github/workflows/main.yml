@@ -7,24 +7,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3 # Необходимо для доступа к файлам репозитория
     
-      - name: Read script from file
-        id: read_script
-        run: |
-          echo "script<<EOF" >> $GITHUB_ENV
-          cat scripts/approval-check.js >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-    
       - name: Check Approval
         id: check_approval
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: ${{ env.script }}
-      
-      - name: Step for Approval True
-        if: steps.check_approval.outputs.approved == 'true'
-        run: echo "Approved! Running steps for approved status..."
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const reviewer = '${{ secrets.MANAGER_USERNAME }}'; // Используйте секрет, если нужно
+            const reviews = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            const approval = reviews.data.some(review => 
+              review.user.login === reviewer && review.state === 'APPROVED'
+            );
+
+            core.setOutput("approved", approval)
       
       - name: Step for Approval False
         if: steps.check_approval.outputs.approved == 'false'
         run: echo "Not approved. Running steps for not approved status..."
+
+      - name: Step for Approval True
+        if: steps.check_approval.outputs.approved == 'true'
+        run: echo "Approved! Running steps for approved status..."
+      
