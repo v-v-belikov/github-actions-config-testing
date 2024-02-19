@@ -14,8 +14,17 @@ jobs:
           cat scripts/approval-check.js >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
     
-      - name: Execute script
+      - name: Check Approval
+        id: check_approval
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: ${{ env.script }}
+      
+      - name: Step for Approval True
+        if: steps.check_approval.outputs.approved == 'true'
+        run: echo "Approved! Running steps for approved status..."
+      
+      - name: Step for Approval False
+        if: steps.check_approval.outputs.approved == 'false'
+        run: echo "Not approved. Running steps for not approved status..."
