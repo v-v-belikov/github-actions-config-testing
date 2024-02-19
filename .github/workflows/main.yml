@@ -2,7 +2,7 @@ name: PR Approval Workflow
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: [submitted, dismissed]
 
 jobs:
   check-approval:
@@ -13,3 +13,5 @@ jobs:
 
       - name: Print Approval Message
         run: echo "Pull Request has been approved!"
+
+
