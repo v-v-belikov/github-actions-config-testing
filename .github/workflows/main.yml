@@ -1,39 +1,16 @@
-name: Check Specific Reviewer Approval
+name: PR Approval Workflow
+
 on:
   pull_request_review:
     types: [submitted]
+
 jobs:
   check-approval:
     runs-on: ubuntu-latest
+    if: github.event.review.state == 'approved'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3 # Необходимо для доступа к файлам репозитория
-    
-      - name: Check Approval
-        id: check_approval
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const reviewer = '${{ secrets.MANAGER_USERNAME }}'; // Используйте секрет, если нужно
-            const reviews = await github.rest.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            });
+        uses: actions/checkout@v3
 
-            const approval = reviews.data.some(review => 
-              review.user.login === reviewer && review.state === 'APPROVED'
-            );
-
-            core.setOutput("approved", approval)
-      
-      - name: Step for Approval False
-        if: steps.check_approval.outputs.approved == 'false'
-        run: echo "Not approved. Running steps for not approved status..."
-
-      - name: Step for Approval True
-        if: steps.check_approval.outputs.approved == 'true'
-        run: echo "Approved! Running steps for approved status..."
-      
+      - name: Print Approval Message
+        run: echo "Pull Request has been approved!"
