@@ -1,7 +1,5 @@
 name: Check Specific Reviewer Approval
-on:
-  pull_request_review:
-    types: [submitted, dismissed]
+on:  workflow_dispatch
 jobs:
   check-approval:
     runs-on: ubuntu-latest
@@ -11,10 +9,13 @@ jobs:
     
       - name: Read script from file
         id: read_script
-        run: echo "::set-output name=script::$(cat scripts/approval-check.js)"
+        run: |
+          echo "script<<EOF" >> $GITHUB_ENV
+          cat scripts/approval-check.js >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
     
       - name: Execute script
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: ${{ steps.read_script.outputs.script }}
+          script: ${{ env.script }}
