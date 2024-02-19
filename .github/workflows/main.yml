@@ -1,7 +1,7 @@
 name: Check Specific Reviewer Approval
-on:  
+on:
   pull_request_review:
-    types: submitted
+    types: [submitted]
 jobs:
   check-approval:
     runs-on: ubuntu-latest
